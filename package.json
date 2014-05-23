@@ -1,6 +1,6 @@
 {
-  "name": "swagger-node-express",
-  "version": "2.0.2",
+  "name": "rest-express",
+  "version": "1.0.0",
   "author": {
     "name": "Tony Tam",
     "email": "fehguy@gmail.com",
@@ -8,14 +8,14 @@
   },
   "contributors": [ 
     {
-      "name": "Pauh Hill",
-      "email": "phill@kixeye.com"
+      "name": "Ryan Icasiano",
+      "email": "ricasiano@gmail.com"
     }
   ],
-  "description": "Wordnik swagger implementation for the express framework",
+  "description": "A fork of the swagger-express implementation",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wordnik/swagger-node-express"
+    "url": "https://github.com/ricasiano/swagger-node-express"
   },
   "keywords": [
     "http",
