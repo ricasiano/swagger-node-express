@@ -1,4 +1,12 @@
 var config = {};
-config.url = 'myprojecturl.com';
+config.url = 'localhost';
 config.port = 1337;
-module.exports.myconfig = config;
+
+
+try{
+  if(typeof(module) !== 'undefined') {
+    module.exports.myconfig = config;
+  }
+}catch(e){
+
+}

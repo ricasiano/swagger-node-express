@@ -16,18 +16,19 @@
 // This is the sample implementation which deals with data for this application
 
 // Include express and swagger in the application.
-var express = require("express")
-  , url = require("url")
-  , cors = require("cors")
-  , swagger = require("../../Common/node/swagger.js");
+var express = require("express"),
+  url = require("url"),
+  cors = require("cors"),
+  swagger = require("../../Common/node/swagger.js"),
+  _ = require("underscore");
 
 //cors and swagger api configs
-var defaultConfig = require("configs/defaults/");
+var defaultConfig = require("./configs/defaults.js");
 //let's reuse the swagger config
 var urlConfig = require("../../swagger-ui/mainconfig.js");
 
 var myConfig = urlConfig.myconfig,
-  swaggerKey = defaultConfig,
+  swaggerKey = defaultConfig.swaggerKey,
   corsSettings = defaultConfig.corsSettings;
 
 var app = express();
@@ -35,9 +36,9 @@ var app = express();
 // Enables CORS
 var enableCORS = function(req, res, next) {
   //add config
-  corsSettings.allowedCors.each(function(allowedSite){
-    if (req.headers.origin === allowedSite)
-      res.header('Access-Control-Allow-Origin',  allowedSite)
+  _.each(corsSettings.allowedCors, function(allowedSite){
+    if (req.headers.origin === allowedSite);
+      res.header('Access-Control-Allow-Origin',  allowedSite);
   });
   res.header('Access-Control-Allow-Methods', corsSettings.allowedMethods);
   res.header('Access-Control-Allow-Headers', corsSettings.allowedHeaders);
@@ -53,7 +54,6 @@ var enableCORS = function(req, res, next) {
 app.use(enableCORS);
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(cors(corsOptions));
 
 // Set the main handler in swagger to the express app
 swagger.setAppHandler(app);
@@ -63,24 +63,24 @@ swagger.addValidator(
   function validate(req, path, httpMethod) {
     var apiDefaultKey = swaggerKey;
     var apiKey = req.headers["api_key"];
+    console.log(apiDefaultKey)
     //assume non-authenticated access for docs and actual api
     if (!apiKey) {
+
       //get the key from query string instead of headers
       apiKey = url.parse(req.url,true).query["api_key"];
-      //key found?
+      //key not found?
       if (apiKey !== undefined) {
         //create a custom header to allow actual requests
         if (apiDefaultKey == apiKey) {
-          req.headers.apiauth = swaggerBackdoor;
-          return true
+          return true;
         }
         else {
-          return false
+          return false;
         }
       }
       //non-authenticated but has authorization headers sent
       else {
-
         if(req.headers.authorization)
           return true
       }
@@ -88,13 +88,14 @@ swagger.addValidator(
   }
 );
 
-//all resources are included here
-var petResources = require("./petResources.js");
 
 //the model schema
 var models = require("./models.js");
-
 // Add models and methods to swagger
+//all resources are included here
+var petResources = require("./petResources.js");
+var resources = {};
+resources;
 swagger.addModels(models)
   .addGet(petResources.findById)
   .addGet(petResources.findByTags)
@@ -103,7 +104,8 @@ swagger.addModels(models)
   .addPut(petResources.updatePet)
   .addDelete(petResources.deletePet);
 
-// set api info
+
+// set your api info
 swagger.setApiInfo({
   title: "Swagger Sample App",
   description: "This is a sample server Petstore server. You can find out more about Swagger at <a href=\"http://swagger.wordnik.com\">http://swagger.wordnik.com</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \"special-key\" to test the authorization filters",
